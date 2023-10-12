@@ -23,10 +23,55 @@ const mensaje = document.getElementById('resultado');
 const ataqueDelJugador = document.getElementById('ataques-del-jugador');
 const ataquesDelEnemigo = document.getElementById('ataques-del-enemigo');
 
+let mokepones = [];
 let ataqueJugador;
 let ataqueEnemigo;
 let vidasJugador = 3;
 let vidasEnemigo = 3;
+
+//Construyendo clases de Mokepones
+
+class Mokepon {
+    constructor(nombre, foto, vida){
+        this.nombre = nombre;
+        this.foto = foto;
+        this.vida = vida;
+        this.ataques = [];
+    }
+}
+
+let leviathan = new Mokepon('Leviathan', 'images/leviathan.png', 5);
+let minotaur = new Mokepon('Minotauro','images/minotaur.png', 5);
+let ifrit = new Mokepon('Ifrit', 'images/ifrit.png', 5);
+
+// Ataques
+leviathan.ataques.push(
+    {nombre: '💧', id: 'boton-agua'},
+    {nombre: '💧', id: 'boton-agua'},
+    {nombre: '💧', id: 'boton-agua'},
+    {nombre: '🔥', id: 'boton-fuego'},
+    {nombre: '🌾', id: 'boton-tierra'},
+);
+
+minotaur.ataques.push(
+    {nombre: '🌾', id: 'boton-tierra'},
+    {nombre: '🌾', id: 'boton-tierra'},
+    {nombre: '🌾', id: 'boton-tierra'},
+    {nombre: '💧', id: 'boton-agua'},
+    {nombre: '🔥', id: 'boton-fuego'}
+);    
+
+ifrit.ataques.push(
+    {nombre: '🔥', id: 'boton-fuego'},
+    {nombre: '🔥', id: 'boton-fuego'},
+    {nombre: '🔥', id: 'boton-fuego'},
+    {nombre: '💧', id: 'boton-agua'},
+    {nombre: '🌾', id: 'boton-tierra'},
+);
+
+// mokepones.push(leviathan,minotaur,ifrit)
+
+// Funciones
 
 function iniciarJuego(){
     sectionSeleccionarAtaque.style.display = 'none'
