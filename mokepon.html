@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="javascript/mokepon.js"></script>
+        <link rel="stylesheet" href="styles.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Fredoka&family=Montserrat:wght@300;400;700&family=Open+Sans:wght@300;400;700&family=Poppins:wght@300&family=Raleway&display=swap" rel="stylesheet">
+        <title>MOKEPON!</title>
+    </head>
+    <body>       
+        <section id="seleccionar-mascota">
+            <div class="caja-titulo">
+                <h1 class="titulo">MOKEPON! 🔥💧🌾</h1>
+            </div>
+            
+            <h2 class="subtitulo">Elige a tu mascota:</h2>
+
+            <div class="tarjetas">
+                <input type="radio" name="mascota" id="leviathan"/>
+                <label for="leviathan" class="tarjeta-de-mokepon">
+                    <p>Leviathan</p>
+                    <img src="images/leviathan.png" alt="Leviathan">
+                </label>
+                
+                <input type="radio" name="mascota" id="minotaur"/>
+                <label for="minotaur" class="tarjeta-de-mokepon">
+                    <p>Minotauro</p>
+                    <img src="images/minotaur.png" alt="Minotauro">
+                </label>
+
+                <input type="radio" name="mascota" id="ifrit"/>
+                <label for="ifrit" class="tarjeta-de-mokepon">
+                    <p>Ifrit</p>
+                    <img class="image-ifrit" src="images/ifrit.png" alt="Ifrit">
+                </label>
+                
+            </div>
+            <!-- Leviathan -> Agua
+            Minotaur -> Tierra
+            Ifrit -> Fuego
+            Levrit -> Agua y Fuego
+            Minthan -> Tierra y Agua
+            Iori -> Fuego y Tierra -->
+            <div class="contenedor-boton-seleccionar">
+                <button id="boton-mascota" class="boton-seleccionar">Seleccionar</button>
+            </div>
+            
+        </section>
+
+        <section id="seleccionar-ataque">
+            <div>
+                <h1 class="titulo">MOKEPON! 🔥💧🌾</h1>
+            </div>
+
+            <h2 class="subtitulo">Elige tu ataque:</h2>
+
+            <div class="botones-de-ataque">
+                <button id="boton-fuego" class="boton-ataque">Fuego 🔥</button>
+                <button id="boton-agua" class="boton-ataque">Agua 💧</button>
+                <button id="boton-tierra" class="boton-ataque">Tierra 🌾</button>
+            </div>
+
+            <div>           
+                <div id="mensajes">  
+                    <p id="resultado">Mucha Suerte</p>
+
+                    <section id="reiniciar">
+                        <button id="boton-reiniciar">Reiniciar</button>
+                    </section> 
+                </div>
+
+                   
+            </div>
+
+            <div class="ataques">
+                <div class="ataques-jugador">
+                    <p id="vidas-jugador">3 Vidas</p>
+                    <p id="mascota-jugador"></p>
+                    <div id="ataques-del-jugador"></div>
+                </div>
+                <div class="ataques-enemigo">
+                    <p id="vidas-enemigo">3 Vidas</p>
+                    <p id="mascota-enemigo"></p>
+                    <div id="ataques-del-enemigo"></div>
+                </div> 
+            </div>
+        </section>
+    </body>
+</html>
