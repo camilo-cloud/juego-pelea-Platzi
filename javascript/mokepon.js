@@ -3,14 +3,9 @@
 const sectionSeleccionarAtaque = document.getElementById('seleccionar-ataque');
 const sectionReiniciar = document.getElementById('reiniciar');
 const botonMascotaJugador = document.getElementById('boton-mascota');
-const btnFuego = document.getElementById('boton-fuego');
-const btnAgua = document.getElementById('boton-agua');
-const btnTierra = document.getElementById('boton-tierra');
 const botonReiniciar = document.getElementById('boton-reiniciar')
 
-const inputLeviathan = document.getElementById('leviathan');
-const inputMinotaur = document.getElementById('minotaur');
-const inputIfrit = document.getElementById('ifrit');
+
 const spanMascotaJugador = document.getElementById('mascota-jugador');
 const sectionSeleccionarMascota = document.getElementById('seleccionar-mascota');
 
@@ -23,9 +18,23 @@ const mensaje = document.getElementById('resultado');
 const ataqueDelJugador = document.getElementById('ataques-del-jugador');
 const ataquesDelEnemigo = document.getElementById('ataques-del-enemigo');
 
+const contenedorTarjetas = document.getElementById('contenedor-tarjetas')
+
+const contenedorAtaques = document.getElementById('contenedor-ataques');
+
 let mokepones = [];
+let opcionDeMokepones;
+let inputLeviathan 
+let inputMinotaur
+let inputIfrit 
+let mascotaJugador;
 let ataqueJugador;
 let ataqueEnemigo;
+let ataquesMoquepon;
+let btnFuego;
+let btnAgua;
+let btnTierra;
+let botones = [];
 let vidasJugador = 3;
 let vidasEnemigo = 3;
 
@@ -69,19 +78,34 @@ ifrit.ataques.push(
     {nombre: '🌾', id: 'boton-tierra'},
 );
 
-// mokepones.push(leviathan,minotaur,ifrit)
+mokepones.push(leviathan,minotaur,ifrit)
+
 
 // Funciones
 
 function iniciarJuego(){
     sectionSeleccionarAtaque.style.display = 'none'
+
+    // Recorrer el array e inyectar los Mokepones al html
+
+    mokepones.forEach((mokepon) => {
+        opcionDeMokepones = `
+        <input type="radio" name="mascota" id=${mokepon.nombre} />
+            <label for=${mokepon.nombre} class="tarjeta-de-mokepon">
+            <p>${mokepon.nombre}</p>
+            <img src=${mokepon.foto} alt=${mokepon.nombre}>
+        </label>
+        `
+        contenedorTarjetas.innerHTML += opcionDeMokepones;
+
+        inputLeviathan = document.getElementById('Leviathan');
+        inputMinotaur = document.getElementById('Minotauro');
+        inputIfrit = document.getElementById('Ifrit');
+    });
+    
     sectionReiniciar.style.display = 'none';
 
     botonMascotaJugador.addEventListener('click', seleccionarMascotaJugador);
-
-    btnFuego.addEventListener('click', ataqueFuego);
-    btnAgua.addEventListener('click', ataqueAgua);
-    btnTierra.addEventListener('click', ataqueTierra);
 
     botonReiniciar.addEventListener('click', reiniciarJuego)
 }
@@ -94,29 +118,66 @@ function seleccionarMascotaJugador(){
     sectionSeleccionarMascota.style.display = 'none'
 
     if(inputLeviathan.checked){
-        spanMascotaJugador.innerHTML = "Leviathan";
+        spanMascotaJugador.innerHTML = inputLeviathan.id;
+        mascotaJugador = inputLeviathan.id
     }else if (inputMinotaur.checked){
-        spanMascotaJugador.innerHTML = "Minotaur";
+        spanMascotaJugador.innerHTML = inputMinotaur.id;
+        mascotaJugador = inputMinotaur.id
     } else if (inputIfrit.checked){
-        spanMascotaJugador.innerHTML = "Ifrit";
+        spanMascotaJugador.innerHTML = inputIfrit.id;
+        mascotaJugador = inputIfrit.id
     }else{
         alert("Selecciona una mascota");
         reiniciarJuego();       
     }
 
+    extraerAtaques(mascotaJugador);
     seleccionarMascotaEnemigo();
 }
 
-function seleccionarMascotaEnemigo(){
-    let mascotaAleatorio =  aleatorio(1,3);
-
-    if(mascotaAleatorio == 1){
-        spanMascotaEnemigo.innerHTML = "Leviathan";
-    } else if(mascotaAleatorio == 2){
-        spanMascotaEnemigo.innerHTML = "Minotaur";
-    } else{
-        spanMascotaEnemigo.innerHTML = "Ifrit";
+function extraerAtaques(mascotaJugador){
+    let ataques;
+    for (let i = 0; i < mokepones.length; i++) {
+        if(mascotaJugador === mokepones[i].nombre){
+            ataques = mokepones[i].ataques
+        }  
     }
+    
+    mostrarAtaques(ataques);   
+}
+
+function mostrarAtaques(ataques){  
+    ataques.forEach((ataque) => {
+        ataquesMoquepon = `
+        <button id=${ataque.id} class="boton-ataque BAtaque">${ataque.nombre} </button>
+        
+        `
+        contenedorAtaques.innerHTML += ataquesMoquepon;
+    })
+
+     // Seleccionar botones luego de crearlos
+    btnFuego = document.getElementById('boton-fuego');
+    btnAgua = document.getElementById('boton-agua');
+    btnTierra = document.getElementById('boton-tierra');
+
+    //En este caso está seleccionando una clase no un id, por eso va así. (Los id no se pueden repetir, por eso se usa una clase en este caso)
+    botones = document.querySelectorAll('.BAtaque');
+
+    // Agregar evento a los botones
+    btnFuego.addEventListener('click', ataqueFuego);
+    btnAgua.addEventListener('click', ataqueAgua);
+    btnTierra.addEventListener('click', ataqueTierra);
+}
+
+function secuenciaAtaque(){
+    
+}
+
+function seleccionarMascotaEnemigo(){
+    let mascotaAleatorio =  aleatorio(0, mokepones.length - 1);
+  
+    spanMascotaEnemigo.innerHTML = mokepones[mascotaAleatorio].nombre
+    
 }
 
 function ataqueFuego(){  
