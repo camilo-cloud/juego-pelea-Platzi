@@ -1,10 +1,10 @@
 // Juego para elegir una mascota y pelear contra la computadora
+// AGUA > FUEGO ....  FUEGO > TIERRA ... TIERRA > AGUA
 
 const sectionSeleccionarAtaque = document.getElementById('seleccionar-ataque');
 const sectionReiniciar = document.getElementById('reiniciar');
 const botonMascotaJugador = document.getElementById('boton-mascota');
 const botonReiniciar = document.getElementById('boton-reiniciar')
-
 
 const spanMascotaJugador = document.getElementById('mascota-jugador');
 const sectionSeleccionarMascota = document.getElementById('seleccionar-mascota');
@@ -85,9 +85,7 @@ ifrit.ataques.push(
 
 mokepones.push(leviathan,minotaur,ifrit)
 
-
 // Funciones
-
 function iniciarJuego(){
     sectionSeleccionarAtaque.style.display = 'none'
 
@@ -155,7 +153,6 @@ function mostrarAtaques(ataques){
     ataques.forEach((ataque) => {
         ataquesMokepon = `
         <button id=${ataque.id} class="boton-ataque BAtaque">${ataque.nombre}</button>
-        
         `
         contenedorAtaques.innerHTML += ataquesMokepon;
     })
@@ -167,8 +164,6 @@ function mostrarAtaques(ataques){
 
     //En este caso está seleccionando una clase no un id, por eso va así. (Los id no se pueden repetir, por eso se usa una clase en este caso)
     botones = document.querySelectorAll('.BAtaque');
-
-   
 }
 
 function secuenciaAtaque(){
@@ -178,20 +173,22 @@ function secuenciaAtaque(){
             if(e.target.textContent==='🔥'){
                 ataqueJugador.push('FUEGO');
                 console.log(ataqueJugador);
-                boton.style.background = '#112f58'
+                boton.style.background = '#112f58';
+                boton.disabled = true;
             } else if (e.target.textContent === '💧' ){
                 ataqueJugador.push('AGUA');
                 console.log(ataqueJugador);
                 boton.style.background = '#112f58'
+                boton.disabled = true;
             } else {
                 ataqueJugador.push('TIERRA');
                 console.log(ataqueJugador);
                 boton.style.background = '#112f58'
+                boton.disabled = true;
             }
             ataqueDelEnemigo(); 
         })
     })
-    
 }
 
 function seleccionarMascotaEnemigo(){
@@ -206,16 +203,20 @@ function seleccionarMascotaEnemigo(){
 function ataqueDelEnemigo(){
     let ataqueAleatorio =  aleatorio(0, ataquesMokeponEnemigo.length - 1);
     
-    if(ataqueAleatorio == 0 || ataqueAleatorio == 1){
-        ataqueEnemigo.push('FUEGO');
-        // alert(`El enemigo eligió el ataque ${ataqueEnemigo}`);
-    } else if(ataqueAleatorio == 3 || ataqueAleatorio == 4){
-        ataqueEnemigo.push('TIERRA');
-        // alert(`El enemigo eligió el ataque ${ataqueEnemigo}`);
-    } else{
-        ataqueEnemigo.push('AGUA');
-        // alert(`El enemigo eligió el ataque ${ataqueEnemigo}`);
+    // Esto es para que el ataque del enemigo se elija del array de ataques de enemigo 
+    // y no que se le asigne cualquiera al azar
+
+    let ataque = ataquesMokeponEnemigo[ataqueAleatorio].nombre;
+    ataquesMokeponEnemigo.splice(ataqueAleatorio, 1);
+    
+    if (ataque == "🔥") {
+    ataqueEnemigo.push("FUEGO");
+    } else if (ataque == "💧") {
+        ataqueEnemigo.push("AGUA");
+    } else {
+        ataqueEnemigo.push("TIERRA");
     }
+
     console.log(ataqueEnemigo);
     iniciarPelea();
 }
@@ -242,23 +243,14 @@ function crearMensaje(resultado){
 
 function crearMensajeFinal(resultadoFinal){
     mensaje.innerHTML = resultadoFinal;
-    
-    btnFuego.disabled = true;
-
-    btnAgua.disabled = true;
-
-    btnTierra.disabled = true;
 
     sectionReiniciar.style.display = 'block';
-   
 }
 
 function indexAmbosOponentes(jugador, enemigo, emojiJugador,emojiEnemigo){
     indexAtaqueJugador = ataqueJugador[jugador] + emojiJugador;
     indexAtaqueEnemigo = ataqueEnemigo[enemigo] + emojiEnemigo;
 }
-
-//agua 1 tierra 2 fuego 3
 
 function batalla(){
 
