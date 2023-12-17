@@ -22,12 +22,16 @@ const contenedorTarjetas = document.getElementById('contenedor-tarjetas')
 
 const contenedorAtaques = document.getElementById('contenedor-ataques');
 
+const sectionVerMapa = document.getElementById('ver-mapa');
+const mapa = document.getElementById('mapa'); 
+
 let mokepones = [];
 let opcionDeMokepones;
 let inputLeviathan 
 let inputMinotaur
 let inputIfrit 
 let mascotaJugador;
+let mascotaJugadorObjeto;
 let ataqueJugador = [];
 let ataqueEnemigo = [];
 let ataquesMokepon;
@@ -42,21 +46,46 @@ let vidasJugador = 3;
 let vidasEnemigo = 3;
 let victoriasJugador = 0;
 let victoriasEnemigo = 0;
+let lienzo = mapa.getContext("2d");
+let intervalo;
+let mapaBackground = new Image();
+mapaBackground.src = './images/mokemap.webp'
 
 //Construyendo clases de Mokepones
 
 class Mokepon {
-    constructor(nombre, foto, vida){
+    constructor(nombre, foto, vida, fotoMapa, x = 10, y = 10){
         this.nombre = nombre;
         this.foto = foto;
         this.vida = vida;
         this.ataques = [];
+        this.x = x;
+        this.y = y;
+        this.ancho = 40;
+        this.alto = 40;
+        this.mapaFoto = new Image();
+        this.mapaFoto.src = fotoMapa;
+        this.velocidadX = 0;
+        this.velocidadY = 0;
+    }
+    pintarMokepon(){
+        lienzo.drawImage(
+            this.mapaFoto,
+            this.x,
+            this.y,
+            this.ancho, 
+            this.alto, 
+        );
     }
 }
 
-let leviathan = new Mokepon('Leviathan', 'images/leviathan.png', 5);
-let minotaur = new Mokepon('Minotauro','images/minotaur.png', 5);
-let ifrit = new Mokepon('Ifrit', 'images/ifrit.png', 5);
+let leviathan = new Mokepon('Leviathan', 'images/leviathan.png', 5, 'images/leviathanFace.png');
+let minotaur = new Mokepon('Minotauro','images/minotaur.png', 5,'images/minotaurFace.png');
+let ifrit = new Mokepon('Ifrit', 'images/ifrit.png', 5,'images/ifritFace.png');
+
+let leviathanEnemigo = new Mokepon('Leviathan', 'images/leviathan.png', 5, 'images/leviathanFace.png', 80, 120);
+let minotaurEnemigo = new Mokepon('Minotauro','images/minotaur.png', 5,'images/minotaurFace.png', 150, 95);
+let ifritEnemigo = new Mokepon('Ifrit', 'images/ifrit.png', 5,'images/ifritFace.png', 200, 190);
 
 // Ataques
 leviathan.ataques.push(
@@ -88,6 +117,7 @@ mokepones.push(leviathan,minotaur,ifrit)
 // Funciones
 function iniciarJuego(){
     sectionSeleccionarAtaque.style.display = 'none'
+    sectionVerMapa.style.display = 'none'
 
     // Recorrer el array e inyectar los Mokepones al html
 
@@ -115,10 +145,13 @@ function iniciarJuego(){
 
 function seleccionarMascotaJugador(){  
     // Hace aparecer la sección de ataque
-    sectionSeleccionarAtaque.style.display = 'flex'
+    // sectionSeleccionarAtaque.style.display = 'flex'
 
     // Hace desaparecer la sección de seleccionar mascota
     sectionSeleccionarMascota.style.display = 'none'
+
+   
+   
 
     if(inputLeviathan.checked){
         spanMascotaJugador.innerHTML = inputLeviathan.id;
@@ -135,6 +168,9 @@ function seleccionarMascotaJugador(){
     }
 
     extraerAtaques(mascotaJugador);
+     // Sección encargada del mapa
+    sectionVerMapa.style.display = 'flex';
+    iniciarMapa();
     seleccionarMascotaEnemigo();
 }
 
@@ -290,6 +326,86 @@ function reiniciarJuego(){
 
 function aleatorio(min, max){
     return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+function pintarCanvas(){
+
+    mascotaJugadorObjeto.x = mascotaJugadorObjeto.x + mascotaJugadorObjeto.velocidadX;
+    mascotaJugadorObjeto.y = mascotaJugadorObjeto.y + mascotaJugadorObjeto.velocidadY;
+    
+    lienzo.clearRect(0,0, mapa.width, mapa.height);
+
+    lienzo.drawImage(
+        mapaBackground,
+        0,
+        0,
+        mapa.width,
+        mapa.height
+    );
+    mascotaJugadorObjeto.pintarMokepon();
+    leviathanEnemigo.pintarMokepon();
+    minotaurEnemigo.pintarMokepon();
+    ifritEnemigo.pintarMokepon();
+}
+
+function moverDerecha(){
+    mascotaJugadorObjeto.velocidadX = 5;
+}
+
+function moverIzquierda(){
+    mascotaJugadorObjeto.velocidadX = -5;
+}
+
+function moverAbajo(){
+    mascotaJugadorObjeto.velocidadY = 5;
+}
+
+function moverArriba(){
+    mascotaJugadorObjeto.velocidadY = -5;
+}
+
+function detenerMovimiento(){
+    
+    mascotaJugadorObjeto.velocidadX = 0;
+    mascotaJugadorObjeto.velocidadY = 0;
+}
+
+function sePresionoUnaTecla(event){
+    switch (event.key) {
+        case 'ArrowUp':
+            moverArriba();
+            break;
+        case 'ArrowDown':
+            moverAbajo();
+            break;
+        case 'ArrowLeft':
+            moverIzquierda();
+            break;          
+        case 'ArrowRight':
+            moverDerecha();
+            break;   
+        default:
+            break;
+    }
+}
+
+function iniciarMapa(){
+    mapa.width = 320;
+    mapa.height = 240;
+    mascotaJugadorObjeto = obtenerObjetoMascota(mascotaJugador)
+    intervalo = setInterval(pintarCanvas, 50);
+
+    // Para mover el pokemon con las teclas
+    window.addEventListener('keydown', sePresionoUnaTecla);
+    window.addEventListener('keyup', detenerMovimiento);
+}
+
+function obtenerObjetoMascota(){
+    for (let i = 0; i < mokepones.length; i++) {
+        if(mascotaJugador === mokepones[i].nombre){
+            return mokepones[i];
+        }  
+    }
 }
 
 // Todo comienza cuando se halla cargado todo el HTML. Es para colocar el script en el head
