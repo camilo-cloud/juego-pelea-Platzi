@@ -96,6 +96,14 @@ leviathan.ataques.push(
     {nombre: '🌾', id: 'boton-tierra'},
 );
 
+leviathanEnemigo.ataques.push(
+    {nombre: '💧', id: 'boton-agua'},
+    {nombre: '💧', id: 'boton-agua'},
+    {nombre: '💧', id: 'boton-agua'},
+    {nombre: '🔥', id: 'boton-fuego'},
+    {nombre: '🌾', id: 'boton-tierra'},
+);
+
 minotaur.ataques.push(
     {nombre: '🌾', id: 'boton-tierra'},
     {nombre: '🌾', id: 'boton-tierra'},
@@ -103,8 +111,22 @@ minotaur.ataques.push(
     {nombre: '💧', id: 'boton-agua'},
     {nombre: '🔥', id: 'boton-fuego'}
 );    
+minotaurEnemigo.ataques.push(
+    {nombre: '🌾', id: 'boton-tierra'},
+    {nombre: '🌾', id: 'boton-tierra'},
+    {nombre: '🌾', id: 'boton-tierra'},
+    {nombre: '💧', id: 'boton-agua'},
+    {nombre: '🔥', id: 'boton-fuego'}
+);  
 
 ifrit.ataques.push(
+    {nombre: '🔥', id: 'boton-fuego'},
+    {nombre: '🔥', id: 'boton-fuego'},
+    {nombre: '🔥', id: 'boton-fuego'},
+    {nombre: '💧', id: 'boton-agua'},
+    {nombre: '🌾', id: 'boton-tierra'},
+);
+ifritEnemigo.ataques.push(
     {nombre: '🔥', id: 'boton-fuego'},
     {nombre: '🔥', id: 'boton-fuego'},
     {nombre: '🔥', id: 'boton-fuego'},
@@ -145,7 +167,7 @@ function iniciarJuego(){
 
 function seleccionarMascotaJugador(){  
     // Hace aparecer la sección de ataque
-    // sectionSeleccionarAtaque.style.display = 'flex'
+    
 
     // Hace desaparecer la sección de seleccionar mascota
     sectionSeleccionarMascota.style.display = 'none'
@@ -171,7 +193,6 @@ function seleccionarMascotaJugador(){
      // Sección encargada del mapa
     sectionVerMapa.style.display = 'flex';
     iniciarMapa();
-    seleccionarMascotaEnemigo();
 }
 
 function extraerAtaques(mascotaJugador){
@@ -205,7 +226,6 @@ function mostrarAtaques(ataques){
 function secuenciaAtaque(){
     botones.forEach((boton)=>{
         boton.addEventListener('click', (e) => {
-            console.log(e.target.textContent);
             if(e.target.textContent==='🔥'){
                 ataqueJugador.push('FUEGO');
                 console.log(ataqueJugador);
@@ -227,12 +247,11 @@ function secuenciaAtaque(){
     })
 }
 
-function seleccionarMascotaEnemigo(){
-    let mascotaAleatorio =  aleatorio(0, mokepones.length - 1);
+function seleccionarMascotaEnemigo(enemigo){
+    // let mascotaAleatorio =  aleatorio(0, mokepones.length - 1);
   
-    spanMascotaEnemigo.innerHTML = mokepones[mascotaAleatorio].nombre
-    ataquesMokeponEnemigo = mokepones[mascotaAleatorio].ataques
-
+    spanMascotaEnemigo.innerHTML = enemigo.nombre;
+    ataquesMokeponEnemigo = enemigo.ataques;
     secuenciaAtaque();
 }
 
@@ -346,6 +365,12 @@ function pintarCanvas(){
     leviathanEnemigo.pintarMokepon();
     minotaurEnemigo.pintarMokepon();
     ifritEnemigo.pintarMokepon();
+    
+    if(mascotaJugadorObjeto.velocidadX !==0 || mascotaJugadorObjeto.velocidadY !== 0){
+        revisarColision(minotaurEnemigo);
+        revisarColision(leviathanEnemigo);
+        revisarColision(ifritEnemigo);
+    }
 }
 
 function moverDerecha(){
@@ -407,7 +432,30 @@ function obtenerObjetoMascota(){
         }  
     }
 }
+function revisarColision(enemigo){
+    const arribaEnemigo = enemigo.y;
+    const abajoEnemigo = enemigo.y + enemigo.alto;
+    const izquierdaEnemigo = enemigo.x;
+    const derechaEnemigo = enemigo.x + enemigo.ancho;
 
+    const arribaMascota = mascotaJugadorObjeto.y;
+    const abajoMascota = mascotaJugadorObjeto.y + mascotaJugadorObjeto.alto;
+    const izquierdaMascota = mascotaJugadorObjeto.x;
+    const derechaMascota = mascotaJugadorObjeto.x + mascotaJugadorObjeto.ancho;
+    if(
+        abajoMascota < arribaEnemigo || 
+        arribaMascota > abajoEnemigo || 
+        derechaMascota < izquierdaEnemigo||
+        izquierdaMascota > derechaEnemigo
+        ){
+            return
+    }
+    detenerMovimiento();
+    clearInterval(intervalo);
+    sectionSeleccionarAtaque.style.display = 'flex';
+    sectionVerMapa.style.display = 'none';
+    seleccionarMascotaEnemigo(enemigo);
+}
 // Todo comienza cuando se halla cargado todo el HTML. Es para colocar el script en el head
 window.addEventListener('load', iniciarJuego);
 
