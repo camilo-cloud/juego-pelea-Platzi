@@ -151,9 +151,7 @@ input:checked + .tarjeta-de-mokepon {
     justify-content: center;
 }
 
-#mapa{
-    border: 2px solid white;
-}
+
 
 @media (max-width: 360px){
     .tarjetas{

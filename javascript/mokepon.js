@@ -50,19 +50,32 @@ let lienzo = mapa.getContext("2d");
 let intervalo;
 let mapaBackground = new Image();
 mapaBackground.src = './images/mokemap.webp'
+let alturaQueBuscamos;
+let anchoDelMapa = window.innerWidth - 20;
+const anchoMaximoDelMapa = 350;
+
+if(anchoDelMapa > anchoMaximoDelMapa){
+    anchoDelMapa = anchoMaximoDelMapa - 20;
+}
+
+alturaQueBuscamos = anchoDelMapa * 600 / 800;
+
+mapa.width = anchoDelMapa;
+mapa.height = alturaQueBuscamos
+
 
 //Construyendo clases de Mokepones
 
 class Mokepon {
-    constructor(nombre, foto, vida, fotoMapa, x = 10, y = 10){
+    constructor(nombre, foto, vida, fotoMapa){
         this.nombre = nombre;
         this.foto = foto;
         this.vida = vida;
         this.ataques = [];
-        this.x = x;
-        this.y = y;
         this.ancho = 40;
         this.alto = 40;
+        this.x = aleatorio(0, mapa.width - this.ancho);
+        this.y = aleatorio(0, mapa.height - this.alto);
         this.mapaFoto = new Image();
         this.mapaFoto.src = fotoMapa;
         this.velocidadX = 0;
@@ -83,9 +96,9 @@ let leviathan = new Mokepon('Leviathan', 'images/leviathan.png', 5, 'images/levi
 let minotaur = new Mokepon('Minotauro','images/minotaur.png', 5,'images/minotaurFace.png');
 let ifrit = new Mokepon('Ifrit', 'images/ifrit.png', 5,'images/ifritFace.png');
 
-let leviathanEnemigo = new Mokepon('Leviathan', 'images/leviathan.png', 5, 'images/leviathanFace.png', 80, 120);
-let minotaurEnemigo = new Mokepon('Minotauro','images/minotaur.png', 5,'images/minotaurFace.png', 150, 95);
-let ifritEnemigo = new Mokepon('Ifrit', 'images/ifrit.png', 5,'images/ifritFace.png', 200, 190);
+let leviathanEnemigo = new Mokepon('Leviathan', 'images/leviathan.png', 5, 'images/leviathanFace.png');
+let minotaurEnemigo = new Mokepon('Minotauro','images/minotaur.png', 5,'images/minotaurFace.png');
+let ifritEnemigo = new Mokepon('Ifrit', 'images/ifrit.png', 5,'images/ifritFace.png');
 
 // Ataques
 leviathan.ataques.push(
@@ -415,8 +428,7 @@ function sePresionoUnaTecla(event){
 }
 
 function iniciarMapa(){
-    mapa.width = 320;
-    mapa.height = 240;
+    
     mascotaJugadorObjeto = obtenerObjetoMascota(mascotaJugador)
     intervalo = setInterval(pintarCanvas, 50);
 
