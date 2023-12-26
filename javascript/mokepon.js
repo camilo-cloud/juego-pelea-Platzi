@@ -25,6 +25,7 @@ const contenedorAtaques = document.getElementById('contenedor-ataques');
 const sectionVerMapa = document.getElementById('ver-mapa');
 const mapa = document.getElementById('mapa'); 
 
+let jugadorId = null;
 let mokepones = [];
 let opcionDeMokepones;
 let inputLeviathan 
@@ -176,7 +177,23 @@ function iniciarJuego(){
     botonMascotaJugador.addEventListener('click', seleccionarMascotaJugador);
 
     botonReiniciar.addEventListener('click', reiniciarJuego)
+
+    unirseAlJuego();
 }
+
+function unirseAlJuego(){
+    fetch("http://localhost:8080/unirse")
+        .then(function (res) {
+            if(res.ok){
+                res.text()
+                    .then(function (respuesta){
+                        console.log(respuesta);
+                        jugadorId = respuesta;
+                    })
+            }
+        })
+}
+
 
 function seleccionarMascotaJugador(){  
     // Hace aparecer la sección de ataque
@@ -202,10 +219,24 @@ function seleccionarMascotaJugador(){
         reiniciarJuego();       
     }
 
+    seleccionarMokepon(mascotaJugador);
+
     extraerAtaques(mascotaJugador);
      // Sección encargada del mapa
     sectionVerMapa.style.display = 'flex';
     iniciarMapa();
+}
+
+function seleccionarMokepon(mascotaJugador){
+    fetch(`http://localhost:8080/mokepon/${jugadorId}`, {
+        method: "post",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            mokepon: mascotaJugador
+        })
+    })
 }
 
 function extraerAtaques(mascotaJugador){
@@ -375,6 +406,9 @@ function pintarCanvas(){
         mapa.height
     );
     mascotaJugadorObjeto.pintarMokepon();
+
+    enviarPosicion(mascotaJugadorObjeto.x, mascotaJugadorObjeto.y)
+
     leviathanEnemigo.pintarMokepon();
     minotaurEnemigo.pintarMokepon();
     ifritEnemigo.pintarMokepon();
@@ -384,6 +418,27 @@ function pintarCanvas(){
         revisarColision(leviathanEnemigo);
         revisarColision(ifritEnemigo);
     }
+}
+
+function enviarPosicion(x, y){
+    fetch(`http://localhost:8080/mokepon/${jugadorId}/posicion`,{
+        method: "post",
+        headers : {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            x,
+            y
+        })
+    })
+    .then(function (res) {
+        if(res.ok){
+            res.json()
+                .then(function ( {enemigos} ) {
+                    console.log(enemigos);
+                })
+        }
+    })
 }
 
 function moverDerecha(){
@@ -430,6 +485,7 @@ function sePresionoUnaTecla(event){
 function iniciarMapa(){
     
     mascotaJugadorObjeto = obtenerObjetoMascota(mascotaJugador)
+    console.log(mascotaJugadorObjeto,mascotaJugador);
     intervalo = setInterval(pintarCanvas, 50);
 
     // Para mover el pokemon con las teclas

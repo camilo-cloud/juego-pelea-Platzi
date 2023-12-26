@@ -151,9 +151,21 @@ input:checked + .tarjeta-de-mokepon {
     justify-content: center;
 }
 
+#ver-mapa button { 
+    width: 80px;
+    height: 40px;
+    border: none;
+    border-radius: 15px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer; 
+    font-family: 'Poppins', sans-serif;
+    margin: 6px 0px;
+    font-size: 12px;
+    text-align: center;
+}
 
-
-@media (max-width: 360px){
+@media (max-width: 560px){
     .tarjetas{
         flex-direction: column;
     }
@@ -161,5 +173,14 @@ input:checked + .tarjeta-de-mokepon {
         display: flex;
         flex-direction: column;
         gap: 5px;
+    }
+}
+
+@media (max-width: 300px){
+    #ver-mapa div{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+
     }
 }
